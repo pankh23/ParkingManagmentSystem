@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(ANSI_BOLD + ANSI_CYAN + "\n🚗 🏍️  Welcome to Vehicle Parking Management System! 🏍️ 🚗" + ANSI_RESET);
         initializeParkingLot();
-        showMenu();
+        showRoleMenu();
     }
 
     private static void initializeParkingLot() {
@@ -24,13 +24,41 @@ public class Main {
         int twoWheelerSlots = scanner.nextInt();
         System.out.print(ANSI_BLUE + "Enter number of 4-wheeler slots 🚗 : " + ANSI_RESET);
         int fourWheelerSlots = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine(); 
 
         parkingLot = new ParkingLot(twoWheelerSlots, fourWheelerSlots);
         System.out.println(ANSI_GREEN + "✅ Parking lot initialized successfully!" + ANSI_RESET);
     }
 
-    private static void showMenu() {
+    private static void showRoleMenu() {
+        while (true) {
+            System.out.println(ANSI_BOLD + ANSI_PURPLE + "\n===== Select Role =====" + ANSI_RESET);
+            System.out.println(ANSI_CYAN + "1. 👤 User");
+            System.out.println("2. 👨‍💼 Admin");
+            System.out.println("3. 🚪 Exit" + ANSI_RESET);
+            System.out.print(ANSI_YELLOW + "Enter your choice: " + ANSI_RESET);
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); 
+
+            switch (choice) {
+                case 1:
+                    UserInterface userInterface = new UserInterface(parkingLot);
+                    userInterface.showUserMenu();
+                    break;
+                case 2:
+                    showAdminMenu();
+                    break;
+                case 3:
+                    System.out.println(ANSI_GREEN + "\nThank you for using the Parking Management System! 👋" + ANSI_RESET);
+                    return;
+                default:
+                    System.out.println(ANSI_YELLOW + "❌ Invalid choice! Please try again." + ANSI_RESET);
+            }
+        }
+    }
+
+    private static void showAdminMenu() {
         while (true) {
             System.out.println(ANSI_BOLD + ANSI_PURPLE + "\n===== 🅿️  Parking Management System 🅿️  =====" + ANSI_RESET);
             System.out.println(ANSI_CYAN + "1. 🚗 Park a Vehicle");
@@ -44,7 +72,7 @@ public class Main {
             System.out.print(ANSI_YELLOW + "Enter your choice: " + ANSI_RESET);
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            scanner.nextLine(); 
 
             switch (choice) {
                 case 1:

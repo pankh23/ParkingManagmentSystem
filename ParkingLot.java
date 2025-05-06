@@ -1,4 +1,5 @@
 import java.util.*;
+import java.time.LocalDateTime;
 
 public class ParkingLot {
     private List<ParkingSlot> parkingSlots;
@@ -10,6 +11,10 @@ public class ParkingLot {
     private int fourWheelerSlots;
 
     public ParkingLot(int twoWheelerSlots, int fourWheelerSlots) {
+        if (twoWheelerSlots < 0 || fourWheelerSlots < 0) {
+            throw new IllegalArgumentException("Number of slots cannot be negative");
+        }
+        
         this.twoWheelerSlots = twoWheelerSlots;
         this.fourWheelerSlots = fourWheelerSlots;
         this.parkingSlots = new ArrayList<>();
@@ -32,6 +37,10 @@ public class ParkingLot {
     }
 
     public boolean parkVehicle(Vehicle vehicle) {
+        if (vehicle == null) {
+            throw new IllegalArgumentException("Vehicle cannot be null");
+        }
+
         // Check if vehicle is already parked
         if (vehicleMap.containsKey(vehicle.getVehicleNumber())) {
             return false;
@@ -42,7 +51,13 @@ public class ParkingLot {
             if (slot.parkVehicle(vehicle)) {
                 vehicleMap.put(vehicle.getVehicleNumber(), vehicle);
                 ownerMap.computeIfAbsent(vehicle.getOwnerName(), k -> new ArrayList<>()).add(vehicle);
-                transactionHistory.add(new Transaction(vehicle));
+                // Create transaction with initial values
+                transactionHistory.add(new Transaction(
+                    vehicle.getVehicleNumber(),
+                    vehicle.getEntryTime(),
+                    null,
+                    0.0
+                ));
                 return true;
             }
         }
@@ -53,35 +68,61 @@ public class ParkingLot {
     }
 
     public Vehicle exitVehicle(String vehicleNumber) {
+        if (vehicleNumber == null || vehicleNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Vehicle number cannot be null or empty");
+        }
+
         Vehicle vehicle = vehicleMap.get(vehicleNumber);
         if (vehicle == null) {
             return null;
         }
 
         // Find and free the parking slot
+        boolean slotFound = false;
         for (ParkingSlot slot : parkingSlots) {
             if (slot.getParkedVehicle() != null && 
                 slot.getParkedVehicle().getVehicleNumber().equals(vehicleNumber)) {
                 slot.removeVehicle();
+                slotFound = true;
                 break;
             }
         }
 
+        if (!slotFound) {
+            throw new IllegalStateException("Vehicle found in map but not in any parking slot");
+        }
+
         // Complete transaction
+        LocalDateTime exitTime = LocalDateTime.now();
+        double baseRate = vehicle.getVehicleType().equals("2W") ? 20.0 : 40.0;
+        long hours = java.time.Duration.between(vehicle.getEntryTime(), exitTime).toHours();
+        double charges = baseRate * Math.max(1, hours);
+        vehicle.setParkingCharges(charges);
+
+        // Update transaction
         Transaction transaction = transactionHistory.stream()
-            .filter(t -> t.getVehicle().getVehicleNumber().equals(vehicleNumber) && t.getExitTime() == null)
+            .filter(t -> t.getVehicleNumber().equals(vehicleNumber) && t.getExitTime() == null)
             .findFirst()
             .orElse(null);
         
         if (transaction != null) {
-            transaction.completeTransaction();
+            transactionHistory.remove(transaction);
+            transactionHistory.add(new Transaction(
+                vehicleNumber,
+                vehicle.getEntryTime(),
+                exitTime,
+                charges
+            ));
         }
 
         // Remove from maps
         vehicleMap.remove(vehicleNumber);
-        ownerMap.get(vehicle.getOwnerName()).remove(vehicle);
-        if (ownerMap.get(vehicle.getOwnerName()).isEmpty()) {
-            ownerMap.remove(vehicle.getOwnerName());
+        List<Vehicle> ownerVehicles = ownerMap.get(vehicle.getOwnerName());
+        if (ownerVehicles != null) {
+            ownerVehicles.remove(vehicle);
+            if (ownerVehicles.isEmpty()) {
+                ownerMap.remove(vehicle.getOwnerName());
+            }
         }
 
         // Check waitlist
@@ -94,10 +135,16 @@ public class ParkingLot {
     }
 
     public List<Vehicle> searchByOwnerName(String ownerName) {
+        if (ownerName == null || ownerName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Owner name cannot be null or empty");
+        }
         return ownerMap.getOrDefault(ownerName, new ArrayList<>());
     }
 
     public Vehicle searchByVehicleNumber(String vehicleNumber) {
+        if (vehicleNumber == null || vehicleNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Vehicle number cannot be null or empty");
+        }
         return vehicleMap.get(vehicleNumber);
     }
 
@@ -124,11 +171,11 @@ public class ParkingLot {
     }
 
     public Queue<Vehicle> getWaitlist() {
-        return waitlist;
+        return new LinkedList<>(waitlist); // Return a copy to prevent external modification
     }
 
     public List<Transaction> getTransactionHistory() {
-        return transactionHistory;
+        return new ArrayList<>(transactionHistory); // Return a copy to prevent external modification
     }
 
     public int getAvailableTwoWheelerSlots() {

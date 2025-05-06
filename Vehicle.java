@@ -1,11 +1,12 @@
 import java.time.LocalDateTime;
+import java.time.Duration;
 
 public class Vehicle {
     private String vehicleNumber;
     private String ownerName;
     private String vehicleType; // "2W" or "4W"
     private LocalDateTime entryTime;
-    private LocalDateTime exitTime;
+    private String parkingSlot;
     private double parkingCharges;
 
     public Vehicle(String vehicleNumber, String ownerName, String vehicleType) {
@@ -13,6 +14,7 @@ public class Vehicle {
         this.ownerName = ownerName;
         this.vehicleType = vehicleType;
         this.entryTime = LocalDateTime.now();
+        this.parkingCharges = 0.0;
     }
 
     // Getters and Setters
@@ -32,31 +34,34 @@ public class Vehicle {
         return entryTime;
     }
 
-    public LocalDateTime getExitTime() {
-        return exitTime;
+    public String getParkingSlot() {
+        return parkingSlot;
     }
 
-    public void setExitTime(LocalDateTime exitTime) {
-        this.exitTime = exitTime;
+    public void setParkingSlot(String parkingSlot) {
+        this.parkingSlot = parkingSlot;
     }
 
     public double getParkingCharges() {
         return parkingCharges;
     }
 
-    public void setParkingCharges(double parkingCharges) {
-        this.parkingCharges = parkingCharges;
+    public void setParkingCharges(double charges) {
+        this.parkingCharges = charges;
+    }
+
+    public long getParkingDuration() {
+        return Duration.between(entryTime, LocalDateTime.now()).toMinutes();
     }
 
     @Override
     public String toString() {
-        return "Vehicle{" +
-                "vehicleNumber='" + vehicleNumber + '\'' +
-                ", ownerName='" + ownerName + '\'' +
-                ", vehicleType='" + vehicleType + '\'' +
-                ", entryTime=" + entryTime +
-                ", exitTime=" + exitTime +
-                ", parkingCharges=" + parkingCharges +
-                '}';
+        return "Vehicle Number: " + vehicleNumber + 
+               "\nOwner Name: " + ownerName + 
+               "\nVehicle Type: " + vehicleType + 
+               "\nEntry Time: " + entryTime + 
+               "\nParking Slot: " + (parkingSlot != null ? parkingSlot : "Not parked") +
+               "\nCurrent Duration: " + getParkingDuration() + " minutes" +
+               "\nParking Charges: Rs. " + parkingCharges;
     }
 } 
