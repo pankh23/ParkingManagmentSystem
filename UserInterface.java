@@ -88,16 +88,34 @@ public class UserInterface {
         Vehicle vehicle = parkingLot.searchByVehicleNumber(vehicleNumber);
         if (vehicle != null) {
             System.out.println(ANSI_GREEN + "✅ Vehicle found!");
-            System.out.println("Location: " + vehicle.getParkingSlot());
             System.out.println("Entry Time: " + vehicle.getEntryTime());
             System.out.println("Current Parking Duration: " + vehicle.getParkingDuration() + " minutes" + ANSI_RESET);
             
-            // Show directions to vehicle
-            System.out.println(ANSI_CYAN + "\nDirections to your vehicle:");
-            System.out.println("1. Enter through main gate");
-            System.out.println("2. Turn " + (vehicle.getParkingSlot().startsWith("A") ? "left" : "right"));
-            System.out.println("3. Look for section " + vehicle.getParkingSlot().substring(0, 1));
-            System.out.println("4. Your vehicle is in slot " + vehicle.getParkingSlot() + ANSI_RESET);
+            String parkingSlot = vehicle.getParkingSlot();
+            if (parkingSlot != null) {
+                System.out.println(ANSI_GREEN + "Location: " + parkingSlot + ANSI_RESET);
+                
+                // Show directions to vehicle
+                System.out.println(ANSI_CYAN + "\nDirections to your vehicle:");
+                System.out.println("1. Enter through main gate");
+                System.out.println("2. Turn " + (parkingSlot.startsWith("A") ? "left" : "right"));
+                System.out.println("3. Look for section " + parkingSlot.substring(0, 1));
+                System.out.println("4. Your vehicle is in slot " + parkingSlot + ANSI_RESET);
+            } else {
+                System.out.println(ANSI_YELLOW + "\n⚠️ Your vehicle is in the waitlist. Please wait for a slot to become available." + ANSI_RESET);
+                
+                // Calculate queue position
+                int position = 0;
+                for (Vehicle v : parkingLot.getWaitlist()) {
+                    position++;
+                    if (v.getVehicleNumber().equals(vehicleNumber)) {
+                        break;
+                    }
+                }
+                if (position > 0) {
+                    System.out.println(ANSI_CYAN + "Current queue position: " + position + ANSI_RESET);
+                }
+            }
         } else {
             System.out.println(ANSI_YELLOW + "❌ Vehicle not found in the parking lot!" + ANSI_RESET);
         }

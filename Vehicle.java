@@ -4,7 +4,7 @@ import java.time.Duration;
 public class Vehicle {
     private String vehicleNumber;
     private String ownerName;
-    private String vehicleType; // "2W" or "4W"
+    private String vehicleType; 
     private LocalDateTime entryTime;
     private String parkingSlot;
     private double parkingCharges;
@@ -17,7 +17,6 @@ public class Vehicle {
         this.parkingCharges = 0.0;
     }
 
-    // Getters and Setters
     public String getVehicleNumber() {
         return vehicleNumber;
     }

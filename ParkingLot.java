@@ -41,17 +41,19 @@ public class ParkingLot {
             throw new IllegalArgumentException("Vehicle cannot be null");
         }
 
-        // Check if vehicle is already parked
+        
         if (vehicleMap.containsKey(vehicle.getVehicleNumber())) {
             return false;
         }
 
-        // Try to find an available slot
+        
         for (ParkingSlot slot : parkingSlots) {
             if (slot.parkVehicle(vehicle)) {
+                
+                vehicle.setParkingSlot(slot.getSlotType() + slot.getSlotNumber());
                 vehicleMap.put(vehicle.getVehicleNumber(), vehicle);
                 ownerMap.computeIfAbsent(vehicle.getOwnerName(), k -> new ArrayList<>()).add(vehicle);
-                // Create transaction with initial values
+                
                 transactionHistory.add(new Transaction(
                     vehicle.getVehicleNumber(),
                     vehicle.getEntryTime(),
@@ -62,7 +64,7 @@ public class ParkingLot {
             }
         }
 
-        // If no slot available, add to waitlist
+        
         waitlist.add(vehicle);
         return false;
     }
@@ -77,7 +79,7 @@ public class ParkingLot {
             return null;
         }
 
-        // Find and free the parking slot
+        
         boolean slotFound = false;
         for (ParkingSlot slot : parkingSlots) {
             if (slot.getParkedVehicle() != null && 
@@ -92,14 +94,14 @@ public class ParkingLot {
             throw new IllegalStateException("Vehicle found in map but not in any parking slot");
         }
 
-        // Complete transaction
+        
         LocalDateTime exitTime = LocalDateTime.now();
         double baseRate = vehicle.getVehicleType().equals("2W") ? 20.0 : 40.0;
         long hours = java.time.Duration.between(vehicle.getEntryTime(), exitTime).toHours();
         double charges = baseRate * Math.max(1, hours);
         vehicle.setParkingCharges(charges);
 
-        // Update transaction
+        
         Transaction transaction = transactionHistory.stream()
             .filter(t -> t.getVehicleNumber().equals(vehicleNumber) && t.getExitTime() == null)
             .findFirst()
