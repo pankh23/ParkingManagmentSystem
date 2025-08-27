@@ -2,8 +2,8 @@ import java.util.*;
 import java.time.LocalDateTime;
 
 public class ParkingLot {
-    private List<ParkingSlot> parkingSlots;
-    private Map<String, Vehicle> vehicleMap; 
+   private List<ParkingSlot> parkingSlots;
+    private Map<String, Vehicle> vehicleMap;
     private Map<String, List<Vehicle>> ownerMap; 
     private Queue<Vehicle> waitlist;
     private List<Transaction> transactionHistory;
@@ -38,7 +38,7 @@ public class ParkingLot {
 
     public boolean parkVehicle(Vehicle vehicle) {
         if (vehicle == null) {
-            throw new IllegalArgumentException("Vehicle cannot be null");
+            throw new IllegalArgumentException("hiiii");
         }
 
         
