@@ -16,18 +16,27 @@ public class WaitQueueDao {
     @Autowired
     private SessionFactory sessionFactory;
 
-    // Helper method to get current session
     private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 
-    // Save a new WaitQueue entry
     public void save(WaitQueue waitQueue) {
-        getSession().persist(waitQueue); // persist replaces deprecated save()
+        getSession().persist(waitQueue);
     }
 
-    // Fetch all WaitQueue entries
+    public void update(WaitQueue waitQueue) {
+        getSession().merge(waitQueue);
+    }
+
+    public WaitQueue findById(Long id) {
+        return getSession().get(WaitQueue.class, id);
+    }
+
     public List<WaitQueue> findAll() {
         return getSession().createQuery("from WaitQueue", WaitQueue.class).list();
+    }
+
+    public void delete(WaitQueue waitQueue) {
+        getSession().remove(waitQueue);
     }
 }

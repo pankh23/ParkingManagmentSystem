@@ -1,6 +1,7 @@
 package com.apc.parking.repository;
 
 import com.apc.parking.model.Vehicle;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,19 +16,34 @@ public class VehicleDao {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void save(Vehicle vehicle) {
-        sessionFactory.getCurrentSession().save(vehicle);
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 
-    public void update(Vehicle vehicle) {
-        sessionFactory.getCurrentSession().update(vehicle);
+    // ✅ Fixed: Now returns the saved/updated vehicle
+    public Vehicle save(Vehicle vehicle) {
+        if(vehicle.getId() == null) {
+            getSession().persist(vehicle); // new vehicle - ID gets generated
+            return vehicle; // Return the vehicle with generated ID
+        } else {
+            return (Vehicle) getSession().merge(vehicle); // existing vehicle - merge returns the managed entity
+        }
+    }
+
+    // ✅ Fixed: Now returns the updated vehicle
+    public Vehicle update(Vehicle vehicle) {
+        return (Vehicle) getSession().merge(vehicle);
     }
 
     public Vehicle findById(Long id) {
-        return sessionFactory.getCurrentSession().get(Vehicle.class, id);
+        return getSession().get(Vehicle.class, id);
     }
 
     public List<Vehicle> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("from Vehicle", Vehicle.class).list();
+        return getSession().createQuery("from Vehicle", Vehicle.class).list();
+    }
+
+    public void delete(Vehicle vehicle) {
+        getSession().remove(vehicle);
     }
 }

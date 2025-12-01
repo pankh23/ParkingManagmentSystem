@@ -1,6 +1,7 @@
 package com.apc.parking.repository;
 
 import com.apc.parking.model.Transaction;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,11 +16,27 @@ public class TransactionDao {
     @Autowired
     private SessionFactory sessionFactory;
 
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
     public void save(Transaction transaction) {
-        sessionFactory.getCurrentSession().save(transaction);
+        getSession().persist(transaction);
+    }
+
+    public void update(Transaction transaction) {
+        getSession().merge(transaction);
+    }
+
+    public Transaction findById(Long id) {
+        return getSession().get(Transaction.class, id);
     }
 
     public List<Transaction> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("from Transaction", Transaction.class).list();
+        return getSession().createQuery("from Transaction", Transaction.class).list();
+    }
+
+    public void delete(Transaction transaction) {
+        getSession().remove(transaction);
     }
 }

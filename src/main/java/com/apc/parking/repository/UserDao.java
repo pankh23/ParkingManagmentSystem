@@ -16,26 +16,34 @@ public class UserDao {
     @Autowired
     private SessionFactory sessionFactory;
 
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
     public void save(User user) {
-        sessionFactory.getCurrentSession().save(user);
+        getSession().persist(user);
     }
 
     public void update(User user) {
-        sessionFactory.getCurrentSession().update(user);
+        getSession().merge(user);
     }
 
     public User findById(Long id) {
-        return sessionFactory.getCurrentSession().get(User.class, id);
+        return getSession().get(User.class, id);
     }
 
     public User findByUsername(String username) {
-        return sessionFactory.getCurrentSession()
+        return getSession()
                 .createQuery("from User where username=:username", User.class)
                 .setParameter("username", username)
                 .uniqueResult();
     }
 
     public List<User> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("from User", User.class).list();
+        return getSession().createQuery("from User", User.class).list();
+    }
+
+    public void delete(User user) {
+        getSession().remove(user);
     }
 }
