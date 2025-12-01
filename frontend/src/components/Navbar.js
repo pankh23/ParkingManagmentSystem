@@ -60,6 +60,7 @@ const Navbar = ({ onMenuToggle, isCollapsed }) => {
     if (path === '/admin') return 'Admin Dashboard';
     if (path === '/admin/parking-lots') return 'Parking Lots Management';
     if (path === '/admin/reservations') return 'Reservations Management';
+    if (path === '/admin/analytics') return 'Analytics Dashboard';
     if (path === '/admin/users') return 'Users Management';
     if (path === '/admin/settings') return 'Settings';
     
@@ -188,6 +189,21 @@ const Navbar = ({ onMenuToggle, isCollapsed }) => {
                     >
                       <span className="mr-3 text-gray-500">📈</span>
                       <span className="font-medium text-gray-700">Reservations</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        navigate('/admin/analytics');
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center p-3 rounded-lg transition-colors duration-200 ${
+                        location.pathname === '/admin/analytics'
+                          ? 'bg-blue-100 text-blue-700 font-semibold border-l-4 border-blue-600'
+                          : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+                      }`}
+                    >
+                      <span className="mr-3 text-gray-500">📊</span>
+                      <span className="font-medium text-gray-700">Analytics</span>
                     </button>
                     
                     <button

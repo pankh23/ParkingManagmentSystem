@@ -71,4 +71,13 @@ export const getTransactionHistory = () => api.get('/parking/transactions').then
 export const getLatestVehicleStatus = () => api.get('/parking/latest-status').then(res => res.data);
 export const getWaitQueueSize = (type) => api.get(`/parking/wait-queue/${type}`).then(res => res.data);
 
+// Analytics API
+export const getAnalyticsSummary = () => api.get('/analytics/summary').then(res => res.data);
+export const getPeakHours = () => api.get('/analytics/peak-hours').then(res => res.data);
+export const getVehicleTypeDistribution = () => api.get('/analytics/vehicle-type-distribution').then(res => res.data);
+export const getDailyOccupancy = () => api.get('/analytics/daily-occupancy').then(res => res.data);
+export const getMonthlyRevenue = () => api.get('/analytics/monthly-revenue').then(res => res.data);
+export const getTopLots = () => api.get('/analytics/top-lots').then(res => res.data);
+export const getBookingTrend = () => api.get('/analytics/booking-trend').then(res => res.data);
+
 export default api;

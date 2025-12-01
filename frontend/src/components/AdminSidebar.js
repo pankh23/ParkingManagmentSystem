@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CarOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, BarChartOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { CarOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, BarChartOutlined, EnvironmentOutlined, LineChartOutlined, CalendarOutlined } from '@ant-design/icons';
 import { Dropdown, Avatar } from 'antd';
 import { useAuth } from '../context/AuthContext';
 
@@ -60,9 +60,15 @@ const AdminSidebar = ({ isCollapsed, onMenuToggle }) => {
     },
     {
       key: '/admin/reservations',
-      icon: <BarChartOutlined className="text-lg" />,
+      icon: <CalendarOutlined className="text-lg" />,
       label: 'Reservations',
       path: '/admin/reservations'
+    },
+    {
+      key: '/admin/analytics',
+      icon: <LineChartOutlined className="text-lg" />,
+      label: 'Analytics',
+      path: '/admin/analytics'
     }
   ];
 

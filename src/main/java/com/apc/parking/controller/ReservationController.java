@@ -35,6 +35,11 @@ public class ReservationController {
     // Static list to store demo reservations (since we're using localStorage in frontend)
     private static List<Reservation> demoReservations = new ArrayList<>();
     
+    // Public getter for analytics service to access demo reservations
+    public static List<Reservation> getDemoReservations() {
+        return new ArrayList<>(demoReservations); // Return copy to prevent external modification
+    }
+    
     // Static map to store lot information for each reservation
     private static Map<Long, Map<String, Object>> reservationLotInfo = new java.util.HashMap<>();
     
@@ -247,6 +252,7 @@ public class ReservationController {
             mockSlot.setSlotNumber("S" + String.format("%03d", mockSlot.getId()));
             mockSlot.setType(request.getSlotType() != null ? request.getSlotType() : "2W");
             mockSlot.setOccupied(true);
+            mockSlot.setParkingLot(lot); // CRITICAL: Set parking lot so analytics can find it
             reservation.setSlot(mockSlot);
             
             // Update slot availability
