@@ -1,0 +1,140 @@
+/* Calendar Close Button Styles */
+.ant-picker-suffix {
+  position: relative;
+}
+
+.calendar-close-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #999;
+  z-index: 10;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s ease;
+}
+
+.calendar-close-button:hover {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+}
+
+.calendar-close-button:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* Ensure the close button doesn't interfere with the picker input */
+.ant-picker-input {
+  padding-right: 40px !important;
+}
+
+/* Make sure the close button is visible when picker is open */
+.ant-picker-focused .calendar-close-button {
+  color: #1890ff;
+}
+
+.ant-picker-focused .calendar-close-button:hover {
+  color: #ff4d4f;
+  background-color: #fff2f0;
+}
+
+/* Make Calendar Popup Smaller */
+.ant-picker-dropdown {
+  max-width: 320px !important;
+  width: 320px !important;
+  transform: translateY(-20px) !important;
+}
+
+.ant-picker-dropdown .ant-picker-panel {
+  width: 100% !important;
+  max-width: 320px !important;
+}
+
+.ant-picker-dropdown .ant-picker-panel-container {
+  width: 100% !important;
+  max-width: 320px !important;
+}
+
+.ant-picker-dropdown .ant-picker-panel-layout {
+  width: 100% !important;
+  max-width: 320px !important;
+}
+
+/* Make calendar cells smaller */
+.ant-picker-dropdown .ant-picker-cell {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 12px !important;
+}
+
+.ant-picker-dropdown .ant-picker-cell-inner {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  font-size: 12px !important;
+}
+
+/* Make time picker smaller */
+.ant-picker-dropdown .ant-picker-time-panel {
+  width: 100% !important;
+  max-width: 320px !important;
+}
+
+.ant-picker-dropdown .ant-picker-time-panel-column {
+  width: 60px !important;
+}
+
+.ant-picker-dropdown .ant-picker-time-panel-cell {
+  height: 28px !important;
+  line-height: 28px !important;
+  font-size: 12px !important;
+}
+
+/* Make header smaller */
+.ant-picker-dropdown .ant-picker-header {
+  padding: 8px 12px !important;
+  height: 40px !important;
+}
+
+.ant-picker-dropdown .ant-picker-header-view {
+  font-size: 14px !important;
+}
+
+/* Make footer smaller */
+.ant-picker-dropdown .ant-picker-footer {
+  padding: 8px 12px !important;
+  height: 40px !important;
+}
+
+.ant-picker-dropdown .ant-picker-ok {
+  height: 28px !important;
+  line-height: 28px !important;
+  font-size: 12px !important;
+  padding: 0 12px !important;
+}
+
+/* Ensure calendar doesn't block other elements */
+.ant-picker-dropdown {
+  z-index: 1050 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Make sure calendar is positioned above other content */
+.ant-picker-dropdown.ant-picker-dropdown-placement-bottomLeft {
+  transform: translateY(-20px) !important;
+}
+
+.ant-picker-dropdown.ant-picker-dropdown-placement-bottomRight {
+  transform: translateY(-20px) !important;
+}

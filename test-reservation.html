@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Reservation Data</title>
+</head>
+<body>
+    <h1>Test Reservation Data</h1>
+    <button onclick="createTestReservation()">Create Test Reservation</button>
+    <button onclick="viewReservations()">View Reservations</button>
+    <button onclick="clearReservations()">Clear Reservations</button>
+    <div id="output"></div>
+
+    <script>
+        function createTestReservation() {
+            const testReservation = {
+                id: 1759058303813,
+                userId: 1,
+                lotId: 1,
+                lotName: 'Lot 1',
+                lotLocation: 'Main Location',
+                slotType: '4W',
+                vehicleNumber: 'QOP-253',
+                startTime: '2025-10-09T19:45:00.000Z', // Oct 09, 19:45
+                endTime: '2025-10-10T05:15:00.000Z',   // Oct 10, 05:15
+                totalAmount: 0,
+                status: 'CONFIRMED',
+                createdAt: new Date().toISOString(),
+                vehicleId: 1,
+                vehiclePlate: 'QOP-253',
+                userName: 'demo-user-1'
+            };
+
+            // Store in localStorage
+            localStorage.setItem('demoBookings', JSON.stringify([testReservation]));
+
+            document.getElementById('output').innerHTML = 
+                '<h3>Test reservation created:</h3><pre>' + 
+                JSON.stringify(testReservation, null, 2) + 
+                '</pre>';
+        }
+
+        function viewReservations() {
+            const reservations = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            document.getElementById('output').innerHTML = 
+                '<h3>Current reservations:</h3><pre>' + 
+                JSON.stringify(reservations, null, 2) + 
+                '</pre>';
+        }
+
+        function clearReservations() {
+            localStorage.removeItem('demoBookings');
+            document.getElementById('output').innerHTML = '<h3>Reservations cleared</h3>';
+        }
+    </script>
+</body>
+</html>

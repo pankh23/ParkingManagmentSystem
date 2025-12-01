@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Admin Data</title>
+</head>
+<body>
+    <h1>Test Admin Portal Data</h1>
+    <button onclick="createTestReservation()">Create Test Reservation</button>
+    <button onclick="viewReservations()">View All Reservations</button>
+    <button onclick="clearReservations()">Clear All Reservations</button>
+    <div id="output"></div>
+
+    <script>
+        function createTestReservation() {
+            const testReservation = {
+                id: 1759058303813,
+                userId: 1,
+                lotId: 1,
+                lotName: 'Lot 1',
+                lotLocation: 'Main Location',
+                slotType: '4W',
+                vehicleNumber: 'QOP-253',
+                startTime: '2025-10-09T19:45:00.000Z', // Oct 09, 19:45
+                endTime: '2025-10-10T05:15:00.000Z',   // Oct 10, 05:15
+                totalAmount: 0,
+                status: 'CONFIRMED',
+                createdAt: new Date().toISOString(),
+                vehicleId: 1,
+                vehiclePlate: 'QOP-253',
+                userName: 'demo-user-1'
+            };
+
+            // Get existing reservations
+            const existingReservations = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            
+            // Add new reservation
+            existingReservations.push(testReservation);
+            
+            // Save back to localStorage
+            localStorage.setItem('demoBookings', JSON.stringify(existingReservations));
+
+            document.getElementById('output').innerHTML = 
+                '<h3>Test reservation created:</h3><pre>' + 
+                JSON.stringify(testReservation, null, 2) + 
+                '</pre><p>Total reservations: ' + existingReservations.length + '</p>';
+        }
+
+        function viewReservations() {
+            const reservations = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            document.getElementById('output').innerHTML = 
+                '<h3>Current reservations (' + reservations.length + '):</h3><pre>' + 
+                JSON.stringify(reservations, null, 2) + 
+                '</pre>';
+        }
+
+        function clearReservations() {
+            localStorage.removeItem('demoBookings');
+            document.getElementById('output').innerHTML = '<h3>All reservations cleared</h3>';
+        }
+
+        // Show current reservations on load
+        window.onload = function() {
+            viewReservations();
+        };
+    </script>
+</body>
+</html>

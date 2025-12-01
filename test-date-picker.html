@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Picker Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .test-link {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .test-link:hover {
+            background: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Date Picker Test Page</h1>
+    
+    <div class="instructions">
+        <h3>Testing Instructions:</h3>
+        <ol>
+            <li>Click on the "Test Date Picker" link below to access the React test page</li>
+            <li>Try clicking on the date input fields</li>
+            <li>Calendar should appear with proper styling</li>
+            <li>Time picker should work for the range picker</li>
+            <li>You should be able to select dates and times</li>
+        </ol>
+    </div>
+
+    <div class="test-container">
+        <h3>Test Links:</h3>
+        <a href="http://localhost:3000/user/calendar-close-test" class="test-link" target="_blank">
+            Calendar Close Test (Auto-Close Test)
+        </a>
+        <a href="http://localhost:3000/user/ok-button-test" class="test-link" target="_blank">
+            OK Button Test (Debug OK Button)
+        </a>
+        <a href="http://localhost:3000/user/simple-date-test" class="test-link" target="_blank">
+            Simple Date Test (Minimal Test)
+        </a>
+        <a href="http://localhost:3000/user/test-date-picker" class="test-link" target="_blank">
+            Test Date Picker (React Component)
+        </a>
+        <a href="http://localhost:3000/user/book-slot" class="test-link" target="_blank">
+            Book Slot Page (Main Booking Form)
+        </a>
+    </div>
+
+    <div class="test-container">
+        <h3>What to Look For:</h3>
+        <ul>
+            <li><strong>Calendar appears:</strong> When you click on date fields, a calendar should pop up</li>
+            <li><strong>Time picker works:</strong> For range picker, you should be able to select time</li>
+            <li><strong>Proper styling:</strong> Calendar should have proper colors and layout</li>
+            <li><strong>No typing in fields:</strong> You shouldn't be able to type directly in the date fields</li>
+            <li><strong>OK button visible:</strong> There should be an OK button to confirm selection</li>
+        </ul>
+    </div>
+
+    <div class="test-container">
+        <h3>If Issues Persist:</h3>
+        <ul>
+            <li>Check browser console for any JavaScript errors</li>
+            <li>Try refreshing the page</li>
+            <li>Check if the frontend is running on port 3000</li>
+            <li>Verify that all CSS files are loading properly</li>
+        </ul>
+    </div>
+
+    <script>
+        // Simple check to see if the frontend is running
+        fetch('http://localhost:3000')
+            .then(response => {
+                if (response.ok) {
+                    console.log('Frontend is running on port 3000');
+                } else {
+                    console.log('Frontend might not be running or there\'s an issue');
+                }
+            })
+            .catch(error => {
+                console.log('Frontend is not running on port 3000:', error);
+            });
+    </script>
+</body>
+</html>

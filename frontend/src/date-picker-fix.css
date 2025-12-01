@@ -1,0 +1,278 @@
+/* Simplified Date Picker Fix CSS */
+/* This file provides clean, minimal styles for Ant Design DatePicker components */
+
+/* Reset and ensure proper display */
+.ant-picker-dropdown {
+  z-index: 9999 !important;
+  position: fixed !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background: #fff !important;
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Ensure panel container is visible */
+.ant-picker-panel-container {
+  z-index: 9999 !important;
+  position: relative !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure panel is visible */
+.ant-picker-panel {
+  z-index: 9999 !important;
+  position: relative !important;
+  background: #fff !important;
+  border: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Time picker styles */
+.ant-picker-time-panel {
+  background: #fff !important;
+  border: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-time-panel-column {
+  background: #fff !important;
+  border-right: 1px solid #f0f0f0 !important;
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-time-panel-column > li {
+  background: #fff !important;
+  color: #000 !important;
+  padding: 4px 8px !important;
+  cursor: pointer !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-time-panel-column > li:hover {
+  background: #f5f5f5 !important;
+  color: #000 !important;
+}
+
+.ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+
+/* Footer and OK button */
+.ant-picker-footer {
+  z-index: 10000 !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  background: #fff !important;
+  border-top: 1px solid #f0f0f0 !important;
+  padding: 8px 12px !important;
+  border-radius: 0 0 8px 8px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-ok,
+.ant-picker-ok-btn {
+  z-index: 10001 !important;
+  position: relative !important;
+  background: #1890ff !important;
+  border-color: #1890ff !important;
+  color: #fff !important;
+  padding: 4px 15px !important;
+  height: 32px !important;
+  line-height: 1.5715 !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  cursor: pointer !important;
+  transition: all 0.3s !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-ok:hover,
+.ant-picker-ok-btn:hover {
+  background: #40a9ff !important;
+  border-color: #40a9ff !important;
+  color: #fff !important;
+}
+
+/* Calendar cells */
+.ant-picker-cell {
+  background: #fff !important;
+  color: #000 !important;
+  display: table-cell !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-cell:hover {
+  background: #f5f5f5 !important;
+  color: #000 !important;
+}
+
+.ant-picker-cell-selected {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+
+.ant-picker-cell-today {
+  background: #e6f7ff !important;
+  color: #1890ff !important;
+  border: 1px solid #91d5ff !important;
+}
+
+/* Range picker specific */
+.ant-picker-cell-in-range {
+  background: #e6f7ff !important;
+  color: #000 !important;
+}
+
+.ant-picker-cell-in-range-start,
+.ant-picker-cell-in-range-end {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+
+/* Header styles */
+.ant-picker-header {
+  background: #fff !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+  color: #000 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-header button {
+  background: transparent !important;
+  color: #000 !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-header button:hover {
+  background: #f5f5f5 !important;
+  color: #000 !important;
+}
+
+/* Body and content */
+.ant-picker-body {
+  background: #fff !important;
+  color: #000 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-content {
+  background: #fff !important;
+  display: table !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-content th,
+.ant-picker-content td {
+  background: #fff !important;
+  color: #000 !important;
+  border: none !important;
+  display: table-cell !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Month/Year panels */
+.ant-picker-month-panel,
+.ant-picker-year-panel {
+  background: #fff !important;
+  color: #000 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-month-panel-cell,
+.ant-picker-year-panel-cell {
+  background: #fff !important;
+  color: #000 !important;
+  cursor: pointer !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-month-panel-cell:hover,
+.ant-picker-year-panel-cell:hover {
+  background: #f5f5f5 !important;
+  color: #000 !important;
+}
+
+.ant-picker-month-panel-cell-selected,
+.ant-picker-year-panel-cell-selected {
+  background: #1890ff !important;
+  color: #fff !important;
+}
+
+/* Force visibility for specific elements only - don't break table layout */
+.ant-picker-dropdown .ant-picker-panel,
+.ant-picker-dropdown .ant-picker-panel-container,
+.ant-picker-dropdown .ant-picker-body,
+.ant-picker-dropdown .ant-picker-content {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Calendar table should use table display */
+.ant-picker-dropdown .ant-picker-content table {
+  display: table !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.ant-picker-dropdown .ant-picker-content th,
+.ant-picker-dropdown .ant-picker-content td {
+  display: table-cell !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Override any conflicting styles */
+.ant-picker-dropdown.ant-picker-dropdown-hidden {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .ant-picker-dropdown {
+    max-height: 80vh !important;
+    width: 90vw !important;
+    left: 5vw !important;
+    right: 5vw !important;
+  }
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Reservation Flow</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .output { margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 5px; }
+        .reservation { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Reservation Flow</h1>
+    <p>This page tests the complete reservation flow from user booking to admin visibility.</p>
+    
+    <div>
+        <button onclick="createTestReservation()">📝 Create Test Reservation</button>
+        <button onclick="viewAllReservations()">👁️ View All Reservations</button>
+        <button onclick="clearAllReservations()">🗑️ Clear All Reservations</button>
+        <button onclick="simulateUserBooking()">👤 Simulate User Booking</button>
+    </div>
+    
+    <div id="output" class="output">
+        <h3>Output:</h3>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Test 1: Create a test reservation
+        function createTestReservation() {
+            const testBooking = {
+                id: Date.now(),
+                userId: 1,
+                lotId: 1,
+                lotName: 'Test Parking Lot',
+                lotLocation: 'Test Location',
+                slotType: '2W',
+                startTime: new Date().toISOString(),
+                endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+                totalAmount: 100,
+                status: 'CONFIRMED',
+                createdAt: new Date().toISOString(),
+                vehicleId: 1,
+                vehiclePlate: 'TEST-123',
+                userName: 'test-user'
+            };
+            
+            // Store in localStorage
+            const existingBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            existingBookings.push(testBooking);
+            localStorage.setItem('demoBookings', JSON.stringify(existingBookings));
+            
+            // Dispatch event (like the real app does)
+            const event = new CustomEvent('bookingCreated', { detail: testBooking });
+            window.dispatchEvent(event);
+            
+            logResult('✅ Test reservation created with ID: ' + testBooking.id);
+            logResult('📦 Stored in localStorage: demoBookings');
+            logResult('📡 Event dispatched: bookingCreated');
+        }
+        
+        // Test 2: View all reservations
+        function viewAllReservations() {
+            const bookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            logResult('📊 Total reservations in localStorage: ' + bookings.length);
+            
+            if (bookings.length === 0) {
+                logResult('❌ No reservations found in localStorage');
+                return;
+            }
+            
+            bookings.forEach((booking, index) => {
+                logResult(`Reservation ${index + 1}: ID=${booking.id}, User=${booking.userName}, Lot=${booking.lotName}, Status=${booking.status}`);
+            });
+        }
+        
+        // Test 3: Clear all reservations
+        function clearAllReservations() {
+            localStorage.removeItem('demoBookings');
+            logResult('🗑️ All reservations cleared from localStorage');
+        }
+        
+        // Test 4: Simulate complete user booking flow
+        function simulateUserBooking() {
+            logResult('🎬 Simulating complete user booking flow...');
+            
+            // Step 1: Create booking (like user does)
+            const userBooking = {
+                id: Date.now(),
+                userId: 1,
+                lotId: 2,
+                lotName: 'Main Parking Lot',
+                lotLocation: 'Building A - Ground Floor',
+                slotType: '4W',
+                startTime: new Date().toISOString(),
+                endTime: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(),
+                totalAmount: 150,
+                status: 'CONFIRMED',
+                createdAt: new Date().toISOString(),
+                vehicleId: 2,
+                vehiclePlate: 'USER-456',
+                userName: 'john-doe'
+            };
+            
+            // Step 2: Store in localStorage
+            const existingBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            existingBookings.push(userBooking);
+            localStorage.setItem('demoBookings', JSON.stringify(existingBookings));
+            
+            // Step 3: Dispatch event
+            const event = new CustomEvent('bookingCreated', { detail: userBooking });
+            window.dispatchEvent(event);
+            
+            logResult('✅ User booking completed successfully!');
+            logResult('📝 Booking details: ' + JSON.stringify(userBooking, null, 2));
+            logResult('🔗 This should now be visible in admin portal at: http://localhost:3000/admin/reservations');
+        }
+        
+        // Helper function to log results
+        function logResult(message) {
+            const resultsDiv = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            resultsDiv.innerHTML += `<div class="reservation">[${timestamp}] ${message}</div>`;
+        }
+        
+        // Listen for booking events (like admin portal does)
+        window.addEventListener('bookingCreated', function(event) {
+            logResult('🎉 Event received: bookingCreated with ID ' + event.detail.id);
+        });
+        
+        // Load existing reservations on page load
+        window.addEventListener('load', function() {
+            const bookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            logResult('🚀 Page loaded. Found ' + bookings.length + ' existing reservations in localStorage');
+        });
+    </script>
+</body>
+</html>

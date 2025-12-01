@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Reservations</title>
+</head>
+<body>
+    <h1>Test Reservation Flow</h1>
+    <button onclick="createTestReservation()">Create Test Reservation</button>
+    <button onclick="viewReservations()">View Reservations</button>
+    <button onclick="clearReservations()">Clear Reservations</button>
+    <div id="output"></div>
+
+    <script>
+        function createTestReservation() {
+            const testBooking = {
+                id: Date.now(),
+                userId: 1,
+                lotId: 1,
+                lotName: 'Test Parking Lot',
+                lotLocation: 'Test Location',
+                slotType: '2W',
+                startTime: new Date().toISOString(),
+                endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+                totalAmount: 100,
+                status: 'CONFIRMED',
+                createdAt: new Date().toISOString(),
+                vehicleId: 1,
+                vehiclePlate: 'TEST-123',
+                userName: 'test-user'
+            };
+            
+            const existingBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            existingBookings.push(testBooking);
+            localStorage.setItem('demoBookings', JSON.stringify(existingBookings));
+            
+            document.getElementById('output').innerHTML = '<p>Test reservation created with ID: ' + testBooking.id + '</p>';
+            console.log('Test booking created:', testBooking);
+        }
+        
+        function viewReservations() {
+            const bookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
+            document.getElementById('output').innerHTML = '<pre>' + JSON.stringify(bookings, null, 2) + '</pre>';
+            console.log('Current reservations:', bookings);
+        }
+        
+        function clearReservations() {
+            localStorage.removeItem('demoBookings');
+            document.getElementById('output').innerHTML = '<p>All reservations cleared</p>';
+        }
+    </script>
+</body>
+</html>
