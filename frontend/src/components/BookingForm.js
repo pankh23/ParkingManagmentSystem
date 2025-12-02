@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
-import { Form, DatePicker } from 'antd';
+import { Form } from 'antd';
 import {
   CalendarOutlined,
   EnvironmentOutlined,
@@ -12,73 +12,15 @@ import {
 import { useQuery } from 'react-query';
 import { getActiveParkingLots, getSlotAvailability } from '../services/api';
 import moment from 'moment';
-
-const { RangePicker } = DatePicker;
+import ModernDateTimePicker from './ModernDateTimePicker';
 
 const BookingForm = ({ onFormChange, selectedLot, setSelectedLot, selectedVehicleType, setSelectedVehicleType }) => {
   const [form] = Form.useForm();
   const [showLotDropdown, setShowLotDropdown] = useState(false);
   const [showVehicleDropdown, setShowVehicleDropdown] = useState(false);
   const [slotAvailability, setSlotAvailability] = useState({});
-  const [pickerOpen, setPickerOpen] = useState(false);
   const lotDropdownRef = useRef(null);
   const vehicleDropdownRef = useRef(null);
-  const pickerRef = useRef(null);
-
-  // Add close button to calendar popup
-  useEffect(() => {
-    if (pickerOpen) {
-      const addCloseButton = () => {
-        const dropdown = document.querySelector('.ant-picker-dropdown');
-        if (dropdown && !dropdown.querySelector('.calendar-close-btn')) {
-          const closeButton = document.createElement('button');
-          closeButton.className = 'calendar-close-btn';
-          closeButton.innerHTML = '✕';
-          closeButton.style.cssText = `
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: #ff4d4f;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-          `;
-          
-          closeButton.onmouseenter = () => {
-            closeButton.style.background = '#ff7875';
-            closeButton.style.transform = 'scale(1.1)';
-          };
-          
-          closeButton.onmouseleave = () => {
-            closeButton.style.background = '#ff4d4f';
-            closeButton.style.transform = 'scale(1)';
-          };
-          
-          closeButton.onclick = (e) => {
-            e.stopPropagation();
-            console.log('Calendar close button clicked');
-            setPickerOpen(false);
-          };
-          
-          dropdown.style.position = 'relative';
-          dropdown.appendChild(closeButton);
-        }
-      };
-      
-      // Add close button after a short delay to ensure dropdown is rendered
-      setTimeout(addCloseButton, 100);
-    }
-  }, [pickerOpen]);
 
   // Fetch parking lots
   const { data: parkingLots = [] } = useQuery(
@@ -456,48 +398,15 @@ const BookingForm = ({ onFormChange, selectedLot, setSelectedLot, selectedVehicl
             rules={[{ required: true, message: 'Please select parking duration!' }]}
             className="mb-0"
           >
-            <RangePicker
-              ref={pickerRef}
-              showTime={{
-                format: 'HH:mm',
-                minuteStep: 15,
-                use12Hours: false
+            <ModernDateTimePicker
+              value={form.getFieldValue('timeRange')}
+              onChange={(dates) => {
+                form.setFieldsValue({ timeRange: dates });
+                onFormChange({ timeRange: dates }, form.getFieldsValue());
               }}
-              format="YYYY-MM-DD HH:mm"
+              placeholder="Select start and end date & time"
               disabledDate={disabledDate}
               disabledTime={disabledTime}
-              className="w-full h-12 rounded-lg border border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow-sm"
-              placeholder={['Start Date & Time', 'End Date & Time']}
-              getPopupContainer={() => document.body}
-              open={pickerOpen}
-              onOpenChange={(open) => {
-                console.log('Date picker open state changed:', open);
-                setPickerOpen(open);
-              }}
-              onChange={(dates) => {
-                console.log('Date picker onChange:', dates);
-                if (dates && dates.length === 2 && dates[0] && dates[1]) {
-                  onFormChange({ timeRange: dates }, form.getFieldsValue());
-                  
-                  // Close picker after both dates are selected
-                  console.log('Both dates selected, closing picker');
-                  setTimeout(() => {
-                    setPickerOpen(false);
-                  }, 100);
-                } else {
-                  onFormChange({ timeRange: null }, form.getFieldsValue());
-                }
-              }}
-              onCalendarChange={(dates) => {
-                console.log('Date picker onCalendarChange:', dates);
-                // Close picker when both dates are selected in calendar
-                if (dates && dates.length === 2 && dates[0] && dates[1]) {
-                  console.log('Both dates selected in calendar, closing picker');
-                  setTimeout(() => {
-                    setPickerOpen(false);
-                  }, 100);
-                }
-              }}
             />
           </Form.Item>
         </div>
