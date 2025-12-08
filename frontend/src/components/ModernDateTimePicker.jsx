@@ -49,23 +49,7 @@ const ModernDateTimePicker = ({ value, onChange, placeholder, disabledDate, disa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activePanel, isOpen]);
 
-  useEffect(() => {
-    // Auto-close when both dates and times are selected
-    if (startDate && endDate && startTime && endTime && isOpen) {
-      const finalStart = startDate.clone().hour(startTime.hour).minute(startTime.minute);
-      const finalEnd = endDate.clone().hour(endTime.hour).minute(endTime.minute);
-      if (finalStart.isBefore(finalEnd)) {
-        // Both dates and times are set, close after a brief delay
-        const timer = setTimeout(() => {
-          if (onChange) {
-            onChange([finalStart, finalEnd]);
-          }
-          setIsOpen(false);
-        }, 300);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [startDate, endDate, startTime, endTime, isOpen, onChange]);
+  // Removed auto-close - user must click OK button to confirm selection
 
   useEffect(() => {
     // Detect sidebar width
@@ -196,17 +180,15 @@ const ModernDateTimePicker = ({ value, onChange, placeholder, disabledDate, disa
 
     const newDate = date.clone();
     if (activePanel === 'start') {
+      // Set start date with current start time
       newDate.hour(startTime.hour).minute(startTime.minute);
       setStartDate(newDate);
-      if (!endDate || newDate.isAfter(endDate)) {
-        const newEndDate = newDate.clone().add(1, 'hour');
-        setEndDate(newEndDate);
-        setEndTime({ hour: newEndDate.hour(), minute: Math.floor(newEndDate.minute() / 15) * 15 });
-      }
+      // Don't auto-set end date - let user select it manually
     } else {
+      // Set end date with current end time
       newDate.hour(endTime.hour).minute(endTime.minute);
       if (startDate && newDate.isBefore(startDate)) {
-        return;
+        return; // Can't select end date before start date
       }
       setEndDate(newDate);
     }

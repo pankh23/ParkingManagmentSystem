@@ -12,13 +12,12 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
 import { useQuery } from 'react-query';
-import { getActiveParkingLots } from '../services/api';
+import { getActiveParkingLots, getUserReservations } from '../services/api';
 import moment from 'moment';
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [reservations, setReservations] = useState([]);
 
   // Fetch parking lots from API
   const { data: parkingLots = [] } = useQuery(
@@ -26,25 +25,43 @@ const UserDashboard = () => {
     getActiveParkingLots
   );
 
-  // Load data from localStorage
-  useEffect(() => {
-    // Load reservations from localStorage
-    const demoBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
-    setReservations(demoBookings);
+  // Fetch user-specific reservations from API
+  const { data: userReservations = [], isLoading: isLoadingReservations, refetch: refetchReservations } = useQuery(
+    ['userReservations', user?.id],
+    () => {
+      if (!user?.id) {
+        return Promise.resolve([]);
+      }
+      return getUserReservations(user.id);
+    },
+    {
+      enabled: !!user?.id, // Only fetch when user is available
+      refetchInterval: 5000, // Refetch every 5 seconds to get latest data
+      onSuccess: (data) => {
+        console.log('✅ User reservations loaded:', data);
+      },
+      onError: (error) => {
+        console.error('❌ Error fetching user reservations:', error);
+      }
+    }
+  );
 
-    // Listen for new bookings
+  // Listen for new bookings to refresh data
+  useEffect(() => {
     const handleBookingCreated = () => {
-      const demoBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
-      setReservations(demoBookings);
+      console.log('🎉 Booking created event received, refreshing reservations...');
+      refetchReservations();
     };
 
     window.addEventListener('bookingCreated', handleBookingCreated);
     return () => window.removeEventListener('bookingCreated', handleBookingCreated);
-  }, []);
-
-  // Filter user's reservations
-  const userReservations = reservations || [];
-  const activeReservations = userReservations.filter(r => r.status === 'CONFIRMED');
+  }, [refetchReservations]);
+  // Process user's reservations
+  const activeReservations = userReservations.filter(r => {
+    const status = r.status?.toString() || r.status;
+    const statusString = typeof status === 'string' ? status : status?.name() || '';
+    return statusString === 'CONFIRMED';
+  });
   const totalAmount = userReservations.reduce((sum, r) => sum + (r.totalAmount || 0), 0);
 
   // Filter available parking lots
@@ -209,42 +226,54 @@ const UserDashboard = () => {
               </Button>
             </div>
 
-            {userReservations.length > 0 ? (
+            {isLoadingReservations ? (
+              <div className="text-center py-12">
+                <div className="text-gray-500">Loading reservations...</div>
+              </div>
+            ) : userReservations.length > 0 ? (
               <div className="space-y-3">
-                {userReservations.slice(0, 5).map((reservation) => (
-                  <div 
-                    key={reservation.id} 
-                    className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:shadow-md transition-all duration-200"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <div className="flex items-center mb-2">
-                          <h4 className="text-lg font-bold text-gray-800 mr-3">
-                            Reservation #{reservation.id}
-                          </h4>
-                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            reservation.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' :
-                            reservation.status === 'PENDING' ? 'bg-orange-100 text-orange-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
-                            {reservation.status}
-                          </span>
+                {userReservations.slice(0, 5).map((reservation) => {
+                  // Handle both string and enum status values
+                  const status = reservation.status?.toString() || reservation.status;
+                  const statusString = typeof status === 'string' ? status : status?.name() || 'PENDING';
+                  
+                  return (
+                    <div 
+                      key={reservation.id} 
+                      className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:shadow-md transition-all duration-200"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <h4 className="text-lg font-bold text-gray-800 mr-3">
+                              Reservation #{reservation.id}
+                            </h4>
+                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                              statusString === 'CONFIRMED' ? 'bg-green-100 text-green-700' :
+                              statusString === 'PENDING' ? 'bg-orange-100 text-orange-700' :
+                              statusString === 'CANCELLED' ? 'bg-red-100 text-red-700' :
+                              statusString === 'COMPLETED' ? 'bg-blue-100 text-blue-700' :
+                              'bg-gray-100 text-gray-700'
+                            }`}>
+                              {statusString}
+                            </span>
+                          </div>
+                          <div className="text-sm text-gray-600 mb-1">
+                            {moment(reservation.startTime).format('MMM DD, YYYY')} - {moment(reservation.endTime).format('MMM DD, YYYY')}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {moment(reservation.startTime).format('HH:mm')} - {moment(reservation.endTime).format('HH:mm')}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-600 mb-1">
-                          {moment(reservation.startTime).format('MMM DD, YYYY')} - {moment(reservation.endTime).format('MMM DD, YYYY')}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {moment(reservation.startTime).format('HH:mm')} - {moment(reservation.endTime).format('HH:mm')}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xl font-bold text-green-600">
-                          ₹{reservation.totalAmount?.toFixed(2) || '0.00'}
+                        <div className="text-right">
+                          <div className="text-xl font-bold text-green-600">
+                            ₹{reservation.totalAmount?.toFixed(2) || '0.00'}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-12">

@@ -395,10 +395,63 @@ public class ReservationController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Map<String, Object>>> getUserReservations(@PathVariable Long userId) {
         try {
-            // For demo purposes, return all reservations
-            // In a real app, you'd filter by user ID
-            return getAllReservations();
+            List<Map<String, Object>> userReservations = new ArrayList<>();
+            
+            // Get reservations from database for this user
+            try {
+                List<Reservation> dbReservations = reservationService.getUserReservations(userId);
+                for (Reservation reservation : dbReservations) {
+                    Map<String, Object> reservationData = new java.util.HashMap<>();
+                    reservationData.put("id", reservation.getId());
+                    reservationData.put("startTime", reservation.getStartTime());
+                    reservationData.put("endTime", reservation.getEndTime());
+                    reservationData.put("totalAmount", reservation.getTotalAmount());
+                    reservationData.put("status", reservation.getStatus());
+                    reservationData.put("user", reservation.getUser());
+                    reservationData.put("vehicle", reservation.getVehicle());
+                    reservationData.put("slot", reservation.getSlot());
+                    if (reservation.getSlot() != null && reservation.getSlot().getParkingLot() != null) {
+                        reservationData.put("lotId", reservation.getSlot().getParkingLot().getId());
+                        reservationData.put("lotName", reservation.getSlot().getParkingLot().getName());
+                    }
+                    userReservations.add(reservationData);
+                }
+            } catch (Exception dbException) {
+                System.err.println("Error fetching reservations from database: " + dbException.getMessage());
+            }
+            
+            // Also filter demo reservations by userId
+            for (Reservation reservation : demoReservations) {
+                if (reservation.getUser() != null && reservation.getUser().getId() != null && 
+                    reservation.getUser().getId().equals(userId)) {
+                    Map<String, Object> reservationData = new java.util.HashMap<>();
+                    reservationData.put("id", reservation.getId());
+                    reservationData.put("startTime", reservation.getStartTime());
+                    reservationData.put("endTime", reservation.getEndTime());
+                    reservationData.put("totalAmount", reservation.getTotalAmount());
+                    reservationData.put("status", reservation.getStatus());
+                    reservationData.put("user", reservation.getUser());
+                    reservationData.put("vehicle", reservation.getVehicle());
+                    reservationData.put("slot", reservation.getSlot());
+                    // Get lot information for this reservation
+                    Map<String, Object> lotInfo = reservationLotInfo.get(reservation.getId());
+                    if (lotInfo != null) {
+                        reservationData.put("lotId", lotInfo.get("lotId"));
+                        reservationData.put("lotName", lotInfo.get("lotName"));
+                    } else {
+                        // Fallback to default values
+                        reservationData.put("lotId", 1L);
+                        reservationData.put("lotName", "Main Parking Lot");
+                    }
+                    userReservations.add(reservationData);
+                }
+            }
+            
+            System.out.println("✅ Returning " + userReservations.size() + " reservations for user ID: " + userId);
+            return ResponseEntity.ok(userReservations);
         } catch (Exception e) {
+            System.err.println("Error getting user reservations: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }

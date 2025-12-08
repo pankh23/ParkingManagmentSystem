@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, Typography, Select, message } from 'antd';
+import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined, CarOutlined } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { login as loginApi } from '../services/api';
 
 const { Title, Text } = Typography;
-const { Option } = Select;
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
@@ -15,25 +15,25 @@ const Login = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      // Simulate login - in real app, this would call your API
-      const userData = {
-        id: 1,
-        username: values.username,
-        role: values.role,
-        email: `${values.username}@example.com`
-      };
+      // Call login API
+      const response = await loginApi({
+        usernameOrEmail: values.usernameOrEmail,
+        password: values.password
+      });
       
-      login(userData);
+      // Login successful - store tokens and user data
+      login(response);
       message.success('Login successful!');
       
       // Navigate based on role
-      if (values.role === 'ADMIN') {
+      if (response.role === 'ADMIN') {
         navigate('/admin');
       } else {
         navigate('/user');
       }
     } catch (error) {
-      message.error('Login failed. Please try again.');
+      const errorMessage = error.response?.data?.error || error.message || 'Login failed. Please try again.';
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -71,25 +71,14 @@ const Login = () => {
           size="large"
         >
           <Form.Item
-            name="username"
-            label="Username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            name="usernameOrEmail"
+            label="Username or Email"
+            rules={[{ required: true, message: 'Please input your username or email!' }]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="Enter your username"
+              placeholder="Enter your username or email"
             />
-          </Form.Item>
-
-          <Form.Item
-            name="role"
-            label="Role"
-            rules={[{ required: true, message: 'Please select your role!' }]}
-          >
-            <Select placeholder="Select your role">
-              <Option value="ADMIN">Admin</Option>
-              <Option value="USER">User</Option>
-            </Select>
           </Form.Item>
 
           <Form.Item
@@ -117,7 +106,10 @@ const Login = () => {
 
         <div style={{ textAlign: 'center', marginTop: '16px' }}>
           <Text type="secondary">
-            Demo: Use any username/password and select role
+            Don't have an account?{' '}
+            <Link to="/signup" style={{ color: '#1890ff' }}>
+              Sign up here
+            </Link>
           </Text>
         </div>
       </Card>

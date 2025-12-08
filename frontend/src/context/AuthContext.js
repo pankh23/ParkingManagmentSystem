@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { logout as logoutApi } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -15,22 +16,55 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in (from localStorage or session)
+    // Check if user is logged in (from localStorage)
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const accessToken = localStorage.getItem('accessToken');
+    
+    if (savedUser && accessToken) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        // Invalid user data, clear it
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+      }
     }
     setLoading(false);
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
+  const login = (authResponse) => {
+    // Extract user data and tokens from auth response
+    const userData = {
+      id: authResponse.userId,
+      username: authResponse.username,
+      email: authResponse.email,
+      role: authResponse.role
+    };
+    
+    // Store tokens and user data
+    localStorage.setItem('accessToken', authResponse.accessToken);
+    if (authResponse.refreshToken) {
+      localStorage.setItem('refreshToken', authResponse.refreshToken);
+    }
     localStorage.setItem('user', JSON.stringify(userData));
+    
+    setUser(userData);
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const logout = async () => {
+    try {
+      // Call logout API to clear server-side cookies
+      await logoutApi();
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    } finally {
+      // Clear local storage
+      setUser(null);
+      localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
   };
 
   const value = {

@@ -17,17 +17,25 @@ import {
   DeleteOutlined
 } from '@ant-design/icons';
 import { useQuery } from 'react-query';
-import { getAllReservations } from '../../services/api';
+import { getUserReservations } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import moment from 'moment';
 
 const MyReservations = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const { user } = useAuth();
 
-  // Fetch reservations from backend API
-  const { data: allReservations = [], isLoading, refetch } = useQuery(
-    'user-reservations',
-    getAllReservations,
+  // Fetch user-specific reservations from backend API
+  const { data: reservations = [], isLoading, refetch } = useQuery(
+    ['user-reservations', user?.id],
+    () => {
+      if (!user?.id) {
+        return Promise.resolve([]);
+      }
+      return getUserReservations(user.id);
+    },
     {
+      enabled: !!user?.id, // Only fetch when user is available
       refetchInterval: 5000, // Refetch every 5 seconds
       onSuccess: (data) => {
         console.log('🔄 User reservations loaded from backend:', data);
@@ -37,10 +45,6 @@ const MyReservations = () => {
       }
     }
   );
-
-  // Filter reservations for current user (for demo, show all reservations)
-  // In a real app, you'd filter by userId from auth context
-  const reservations = allReservations;
 
   // Listen for new bookings to refresh data
   useEffect(() => {

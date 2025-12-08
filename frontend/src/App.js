@@ -9,6 +9,7 @@ import './calendar-close-button.css'; // Import calendar close button styles
 
 // Components
 import Login from './components/Login';
+import Signup from './components/Signup';
 import AdminDashboard from './components/AdminDashboard';
 import UserDashboard from './components/UserDashboard';
 import Layout from './components/Layout';
@@ -82,7 +83,7 @@ function AppRoutes() {
   useEffect(() => {
     const checkBackendConnection = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/parking-lots', {
+        const response = await fetch('http://localhost:8080/api/health', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -106,12 +107,12 @@ function AppRoutes() {
     if (!loading) {
       if (user) {
         // User is logged in, redirect to appropriate dashboard
-        if (location.pathname === '/login' || location.pathname === '/') {
+        if (location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/') {
           navigate(user.role === 'ADMIN' ? '/admin' : '/user', { replace: true });
         }
       } else {
-        // User is not logged in, redirect to login
-        if (location.pathname !== '/login') {
+        // User is not logged in, allow access to login and signup pages
+        if (location.pathname !== '/login' && location.pathname !== '/signup') {
           navigate('/login', { replace: true });
         }
       }
@@ -126,9 +127,15 @@ function AppRoutes() {
     );
   }
 
-  // Show login if no user
+  // Show login/signup if no user
   if (!user) {
-    return <Login />;
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Login />} />
+      </Routes>
+    );
   }
 
   // Show appropriate dashboard based on user role

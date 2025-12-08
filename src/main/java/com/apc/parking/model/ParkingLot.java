@@ -1,5 +1,6 @@
 package com.apc.parking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ParkingLot {
     private Boolean isActive = true;
 
     @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Slot> slots;
 
     // Constructors

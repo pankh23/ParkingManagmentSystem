@@ -20,8 +20,14 @@ public class UserDao {
         return sessionFactory.getCurrentSession();
     }
 
-    public void save(User user) {
-        getSession().persist(user);
+    public User save(User user) {
+        Session session = getSession();
+        if (user.getId() == null) {
+            session.persist(user);
+            return user;
+        } else {
+            return (User) session.merge(user);
+        }
     }
 
     public void update(User user) {
@@ -36,6 +42,13 @@ public class UserDao {
         return getSession()
                 .createQuery("from User where username=:username", User.class)
                 .setParameter("username", username)
+                .uniqueResult();
+    }
+
+    public User findByEmail(String email) {
+        return getSession()
+                .createQuery("from User where email=:email", User.class)
+                .setParameter("email", email)
                 .uniqueResult();
     }
 

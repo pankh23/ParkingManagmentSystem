@@ -50,9 +50,8 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <!-- Enable scheduling -->
-    <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"/>
-    
+    <!-- Scheduling is enabled via @EnableScheduling in ParkingManagementApplication -->
+    <!-- Removed task:annotation-driven to avoid conflict with Spring Boot's @EnableScheduling -->
     <task:executor id="taskExecutor" pool-size="5"/>
     <task:scheduler id="taskScheduler" pool-size="10"/>
 
