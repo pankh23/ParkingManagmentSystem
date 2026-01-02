@@ -17,14 +17,22 @@
     <!-- Scan your packages -->
     <context:component-scan base-package="com.apc.parking"/>
 
+    <!-- Property Placeholder Configuration -->
+    <context:property-placeholder 
+        location="classpath:application.properties"
+        ignore-resource-not-found="true"
+        ignore-unresolvable="true"/>
+
     <!-- DataSource -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://localhost:5432/parkingdb"/>
-        <property name="username" value="parkinguser"/>
-        <property name="password" value="parkingpass"/>
+        <property name="url" value="${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/parkingdb}"/>
+        <property name="username" value="${SPRING_DATASOURCE_USERNAME:parkinguser}"/>
+        <property name="password" value="${SPRING_DATASOURCE_PASSWORD:parkingpass}"/>
         <property name="initialSize" value="5"/>
         <property name="maxTotal" value="20"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="validationQuery" value="SELECT 1"/>
     </bean>
 
     <!-- Hibernate SessionFactory -->
@@ -34,9 +42,9 @@
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-                <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.format_sql">true</prop>
-                <prop key="hibernate.use_sql_comments">true</prop>
+                <prop key="hibernate.show_sql">${HIBERNATE_SHOW_SQL:false}</prop>
+                <prop key="hibernate.format_sql">${HIBERNATE_FORMAT_SQL:false}</prop>
+                <prop key="hibernate.use_sql_comments">${HIBERNATE_USE_SQL_COMMENTS:false}</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>
             </props>
