@@ -49,6 +49,8 @@ The following files have been updated/created for deployment:
 
 **Note**: Since Java is not available as a direct runtime option, we're using Docker which will build and run the Java application. The Dockerfile uses a multi-stage build to create an optimized Java 17 image.
 
+**Important**: Make sure the `Dockerfile` is committed and pushed to your GitHub repository. Render needs it to build your application.
+
 ### Step 3: Set Environment Variables
 
 In Render Dashboard → Your Web Service → **Environment** tab, add:
@@ -284,9 +286,13 @@ curl https://parking-system-backend.onrender.com/api/parking-lots
 ### Database Connection Issues
 
 - Verify database is running on Render
-- Check connection string format
+- Check connection string format (use internal hostname for services on same network)
 - Ensure database credentials are correct
 - Check if database is accessible from your service
+- **Important**: Make sure `SPRING_DATASOURCE_URL` uses the internal hostname format: `jdbc:postgresql://dpg-xxxxx:5432/database_name`
+- Verify environment variables are set correctly in Render dashboard
+- Check if database needs to be initialized (tables created)
+- If using Render's internal database URL, ensure you're using the internal hostname, not external
 
 ### CORS Errors
 
