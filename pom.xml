@@ -229,6 +229,13 @@
                 <configuration>
                     <mainClass>com.apc.parking.ParkingManagementApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Exec plugin to run the main class -->
@@ -237,23 +244,15 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.apc.parking.ParkingApp</mainClass>
+                    <mainClass>com.apc.parking.ParkingManagementApplication</mainClass>
                 </configuration>
             </plugin>
 
-            <!-- Jar plugin -->
+            <!-- Jar plugin - removed mainClass to let Spring Boot plugin handle it -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.apc.parking.ParkingApp</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>

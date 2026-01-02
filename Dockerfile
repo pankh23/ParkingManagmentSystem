@@ -16,7 +16,7 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Copy the built JAR from build stage
+# Copy the built JAR from build stage (Spring Boot plugin repackages it)
 COPY --from=build /app/target/APCParkingSystem-1.0-SNAPSHOT.jar app.jar
 
 # Expose port (Render will set PORT env var)
