@@ -10,10 +10,12 @@ The following files have been updated/created for deployment:
 
 1. ✅ `application.properties` - Updated to use environment variables
 2. ✅ `CORSConfig.java` - Updated to support dynamic allowed origins
-3. ✅ `Procfile` - Created for Render deployment
-4. ✅ `render.yaml` - Created for Render infrastructure as code
-5. ✅ `vercel.json` - Created for Vercel frontend deployment
-6. ✅ `package.json` - Added `vercel-build` script
+3. ✅ `Dockerfile` - Created for Docker-based deployment on Render
+4. ✅ `.dockerignore` - Created to exclude unnecessary files from Docker build
+5. ✅ `Procfile` - Created for Render deployment (alternative method)
+6. ✅ `render.yaml` - Created for Render infrastructure as code
+7. ✅ `vercel.json` - Created for Vercel frontend deployment
+8. ✅ `package.json` - Added `vercel-build` script
 
 ---
 
@@ -41,10 +43,11 @@ The following files have been updated/created for deployment:
    - **Region**: Same as database
    - **Branch**: `main` (or your default branch)
    - **Root Directory**: Leave empty
-   - **Runtime**: `Java`
-   - **Build Command**: `mvn clean package -DskipTests`
-   - **Start Command**: `java -jar target/APCParkingSystem-1.0-SNAPSHOT.jar`
+   - **Runtime**: `Docker` (select Docker from the list)
+   - **Dockerfile Path**: `./Dockerfile` (or leave default if Dockerfile is in root)
    - **Plan**: Free (or paid)
+
+**Note**: Since Java is not available as a direct runtime option, we're using Docker which will build and run the Java application. The Dockerfile uses a multi-stage build to create an optimized Java 17 image.
 
 ### Step 3: Set Environment Variables
 
@@ -52,9 +55,9 @@ In Render Dashboard → Your Web Service → **Environment** tab, add:
 
 ```
 SPRING_PROFILES_ACTIVE=prod
-SPRING_DATASOURCE_URL=<from database connection string>
-SPRING_DATASOURCE_USERNAME=<from database>
-SPRING_DATASOURCE_PASSWORD=<from database>
+SPRING_DATASOURCE_URL=jdbc:postgresql://dpg-d5btajh5pdvs73bstt0g-a:5432/parkingdb_q1ax
+SPRING_DATASOURCE_USERNAME=parkinguser
+SPRING_DATASOURCE_PASSWORD=5tJZwjLE6TIbnaSPAw1OG7NOoTY5EBpA
 RAZORPAY_KEY_ID=your_production_key_id
 RAZORPAY_KEY_SECRET=your_production_key_secret
 JWT_SECRET=<generate a strong random string, minimum 32 characters>
@@ -64,6 +67,11 @@ MAIL_PASSWORD=your_app_password (optional)
 APP_EMAIL_ENABLED=false
 PORT=10000
 ```
+
+**Important Notes:**
+- Use the **Internal Database URL** hostname (`dpg-d5btajh5pdvs73bstt0g-a`) when your backend service is on Render (same network)
+- Convert PostgreSQL URL to JDBC format: `jdbc:postgresql://hostname:port/database`
+- Format: `jdbc:postgresql://dpg-d5btajh5pdvs73bstt0g-a:5432/parkingdb_q1ax`
 
 **Important Notes:**
 - Get database credentials from your PostgreSQL service in Render
@@ -259,9 +267,12 @@ curl https://parking-system-backend.onrender.com/api/parking-lots
 ### Backend Not Starting on Render
 
 - Check build logs in Render dashboard
-- Verify Java version (Render uses Java 17+)
+- Verify Docker build is successful (check Dockerfile syntax)
+- Ensure Dockerfile is in the root directory
 - Check environment variables are set correctly
 - Review application logs in Render dashboard
+- Verify Java 17 is being used (check Dockerfile base image)
+- If build fails, check Maven dependencies are resolving correctly
 
 ### Frontend Can't Connect to Backend
 
