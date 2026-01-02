@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Public endpoints
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/health").permitAll()
+                .antMatchers("/api/init/**").permitAll() // Allow initialization endpoint
                 .antMatchers("/actuator/**").permitAll()
                 // Protected endpoints - require authentication
                 .antMatchers("/api/**").authenticated()
