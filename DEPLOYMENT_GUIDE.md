@@ -98,7 +98,12 @@ PORT=10000
 2. Sign up/Login with GitHub
 3. Click **"Add New..."** → **"Project"**
 4. Import your GitHub repository
-5. Configure:
+5. **Project Name**: Enter a lowercase name (e.g., `parking-management-system` or `parkingmanagmentsystem`)
+   - **Must be lowercase** (no uppercase letters)
+   - Can include letters, digits, '.', '_', '-'
+   - Cannot contain '---'
+   - Example valid names: `parking-management-system`, `parkingmanagmentsystem`, `parking_management_system`
+6. Configure:
    - **Framework Preset**: `Create React App`
    - **Root Directory**: `frontend`
    - **Build Command**: `npm run build` (or leave default)
