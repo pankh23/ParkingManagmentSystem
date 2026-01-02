@@ -115,9 +115,12 @@ PORT=10000
 Before deploying, add environment variable:
 
 - **Key**: `REACT_APP_API_URL`
-- **Value**: `https://parking-system-backend.onrender.com/api`
+- **Value**: `https://parking-system-backend-7v8u.onrender.com/api`
 
-**Important**: Replace `parking-system-backend.onrender.com` with your actual Render backend URL.
+**Important**: 
+- Replace `parking-system-backend-7v8u.onrender.com` with your actual Render backend URL
+- **Must include `/api` at the end** - The frontend expects the base URL to already include `/api`
+- Example: `https://your-backend.onrender.com/api`
 
 ### Step 3: Deploy
 
