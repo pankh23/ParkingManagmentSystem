@@ -178,6 +178,43 @@ vercel env add REACT_APP_API_URL
 
 ---
 
+## 👤 Admin Account Setup
+
+### Create Admin Account
+
+Admin accounts must be created manually in the database. You cannot sign up as admin through the UI.
+
+**Default Admin Credentials:**
+- **Username**: `admin`
+- **Email**: `admin@apcparking.com`
+- **Password**: `admin123`
+
+**To create admin account:**
+
+1. Connect to your Render PostgreSQL database
+2. Run this SQL:
+```sql
+INSERT INTO users (username, email, password, role, created_at, updated_at)
+VALUES (
+    'admin',
+    'admin@apcparking.com',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    'ADMIN',
+    NOW(),
+    NOW()
+)
+ON CONFLICT (username) DO UPDATE
+SET 
+    email = EXCLUDED.email,
+    password = EXCLUDED.password,
+    role = 'ADMIN',
+    updated_at = NOW();
+```
+
+3. Verify: `SELECT id, username, email, role FROM users WHERE role = 'ADMIN';`
+
+4. Login at your frontend with: `admin` / `admin123`
+
 ## 🗄️ Database Initialization
 
 After deployment, initialize your database:
