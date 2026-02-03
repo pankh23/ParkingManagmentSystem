@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/parking-lots")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ParkingLotController {
 
     @Autowired

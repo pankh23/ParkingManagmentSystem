@@ -33,9 +33,12 @@ services:
       - key: APP_EMAIL_ENABLED
         value: "false"
 
+# If parking-db is suspended (free tier expired), upgrade it in Render Dashboard
+# or create a new PostgreSQL and set SPRING_DATASOURCE_* in the web service env.
+# See DATABASE_SETUP.md for steps.
 databases:
   - name: parking-db
     databaseName: parkingdb
     user: parkinguser
-    plan: free
+    plan: free  # free tier can expire; upgrade or create new DB and update env vars
 
