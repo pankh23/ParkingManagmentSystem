@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CarOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, BarChartOutlined, EnvironmentOutlined, LineChartOutlined, CalendarOutlined } from '@ant-design/icons';
+import { CarOutlined, UserOutlined, LogoutOutlined, DashboardOutlined, EnvironmentOutlined, LineChartOutlined, CalendarOutlined } from '@ant-design/icons';
 import { Dropdown, Avatar } from 'antd';
 import { useAuth } from '../context/AuthContext';
 

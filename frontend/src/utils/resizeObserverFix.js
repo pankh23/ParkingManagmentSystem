@@ -174,10 +174,9 @@ if (window.ResizeObserver) {
   };
 }
 
-// Override ResizeObserverEntry if it exists
+// ResizeObserverEntry exists check (placeholder for future wrapping if needed)
 if (window.ResizeObserverEntry) {
-  const OriginalResizeObserverEntry = window.ResizeObserverEntry;
-  // Keep the original but wrap any methods that might throw errors
+  // Keep the original reference available for potential future use
 }
 
 // Suppress ResizeObserver errors globally
