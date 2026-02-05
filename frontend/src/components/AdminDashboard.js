@@ -263,13 +263,9 @@ const AdminDashboard = () => {
   );
 
   const RecentReservations = () => {
-    // Get recent reservations (last 5) with useMemo (allReservations is parent state)
-    const recentReservations = useMemo(() => {
-      return allReservations
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- allReservations from parent state
-    }, [allReservations]);
+    const recentReservations = [...allReservations]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 5);
 
     const handleRefresh = () => {
       const demoBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
